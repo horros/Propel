@@ -333,7 +333,7 @@ EOF;
 		$this->assertSame($expected, $columnDiff);
 	}
 
-public function testGetModifyColumnDDLWithVarcharWithoutSizeAndPlatform()
+	public function testGetModifyColumnDDLWithVarcharWithoutSizeAndPlatform()
 	{
 		$t1 = new Table('foo');
 		$c1 = new Column('bar');
@@ -361,5 +361,5 @@ EOF;
 		$expected = false;
 		$this->assertSame($expected, $columnDiff);
 	}
-	
+
 }
