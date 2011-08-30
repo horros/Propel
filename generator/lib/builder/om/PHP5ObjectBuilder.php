@@ -2350,8 +2350,6 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 				\$valueSet = " . $this->getPeerClassname() . "::getValueSet(" . $this->getColumnConstant($col) . ");
 				if (isset(\$valueSet[\$value])) {
 					\$value = \$valueSet[\$value];
-				} else {
-					\$value = null;
 				}";
 			} elseif (PropelTypes::PHP_ARRAY === $col->getType()) {
 				$script .= "
@@ -2465,7 +2463,9 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 		}
 
 		\$con->beginTransaction();
-		try {";
+		try {
+			\$deleteQuery = ".$this->getQueryClassname()."::create()
+				->filterByPrimaryKey(\$this->getPrimaryKey());";
 		if($this->getGeneratorConfig()->getBuildProperty('addHooks')) {
 			$script .= "
 			\$ret = \$this->preDelete(\$con);";
@@ -2473,9 +2473,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 			$this->applyBehaviorModifier('preDelete', $script, "			");
 			$script .= "
 			if (\$ret) {
-				".$this->getQueryClassname()."::create()
-					->filterByPrimaryKey(\$this->getPrimaryKey())
-					->delete(\$con);
+				\$deleteQuery->delete(\$con);
 				\$this->postDelete(\$con);";
 			// apply behaviors
 			$this->applyBehaviorModifier('postDelete', $script, "				");
@@ -2489,7 +2487,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 			// apply behaviors
 			$this->applyBehaviorModifier('preDelete', $script, "			");
 			$script .= "
-			".$this->getPeerClassname()."::doDelete(\$this, \$con);";
+			\$deleteQuery->delete(\$con);";
 			// apply behaviors
 			$this->applyBehaviorModifier('postDelete', $script, "			");
 			$script .= "

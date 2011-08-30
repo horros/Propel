@@ -138,7 +138,7 @@ abstract class OMBuilder extends DataModelBuilder
 	 */
 	public function getClassFilePath()
 	{
-		return ClassTools::getFilePath($this->getPackage(), $this->getClassname());
+		return ClassTools::createFilePath($this->getPackagePath(), $this->getClassname());
 	}
 
 	/**
@@ -161,7 +161,13 @@ abstract class OMBuilder extends DataModelBuilder
 	 */
 	public function getPackagePath()
 	{
-		return strtr($this->getPackage(), '.', '/');
+		$pkg = $this->getPackage();
+
+		if (strpos($pkg, '/') !== false) {
+			return preg_replace('#\.(map|om)$#', '/\1', $pkg);
+		}
+
+		return strtr($pkg, '.', '/');
 	}
 
 	/**
@@ -505,10 +511,13 @@ abstract class OMBuilder extends DataModelBuilder
           $modifier->$hookName($script, $this);
         } else {
           // regular hook: the behavior returns a string to append to the script string
+          if (!$addedScript = $modifier->$hookName($this)) {
+          	continue;
+          }
           $script .= "
 " . $tab . '// ' . $behavior->getName() . " behavior
 ";
-          $script .= preg_replace('/^/m', $tab, $modifier->$hookName($this));
+          $script .= preg_replace('/^/m', $tab, $addedScript);
          }
       }
     }
