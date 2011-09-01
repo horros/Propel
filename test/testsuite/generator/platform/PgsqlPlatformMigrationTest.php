@@ -362,4 +362,16 @@ EOF;
 		$this->assertSame($expected, $columnDiff);
 	}
 
+	/**
+	 * @dataProvider providerForTestGetModifyColumnRemoveDefaultValueDDL
+	 */
+	function testGetModifyColumnRemoveDefaultValueDDL($columnDiffs)
+	{
+	    $expected = <<<EOF
+
+ALTER TABLE "test" ALTER COLUMN "test" DROP DEFAULT;
+
+EOF;
+	    $this->assertEquals($expected, $this->getPlatform()->getModifyColumnDDL($columnDiffs));
+	}
 }
