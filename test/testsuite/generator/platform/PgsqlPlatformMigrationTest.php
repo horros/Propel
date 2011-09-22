@@ -406,8 +406,8 @@ ALTER TABLE \"test\" DROP CONSTRAINT \"test_U_1\";
 
 CREATE UNIQUE INDEX \"test_U_1\" ON \"test\" (\"test\");
 ";
-		$this->assertEquals($expected1, $this->getPlatform()->getModifyTableDDL($tableDiff));
-		$this->assertEquals($expected2, $this->getPlatform()->getModifyTableDDL($tableDiff->getReverseDiff()));
+		$this->assertEquals($this->getPlatform()->getModifyTableDDL($tableDiff), $expected1);
+		$this->assertEquals($this->getPlatform()->getModifyTableDDL($tableDiff->getReverseDiff()), $expected2);
 	}
 
 	/**

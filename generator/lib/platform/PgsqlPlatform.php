@@ -491,7 +491,7 @@ ALTER TABLE %s ALTER COLUMN %s;
 		if ($index instanceof Unique) {
 			if ($index->isConstraint()) {
 
-$pattern = "		
+$pattern = "
 ALTER TABLE %s DROP CONSTRAINT %s;
 ";
 				return sprintf($pattern,
