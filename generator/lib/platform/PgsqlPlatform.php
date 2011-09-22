@@ -490,7 +490,8 @@ ALTER TABLE %s ALTER COLUMN %s;
 	{
 		if ($index instanceof Unique) {
 			if ($index->isConstraint()) {
-				$pattern = "
+
+$pattern = "		
 ALTER TABLE %s DROP CONSTRAINT %s;
 ";
 				return sprintf($pattern,
@@ -509,5 +510,22 @@ DROP INDEX %s;
 		}
 		return sprintf($pattern, $this->quoteIdentifier($name));
 	}
+	
+	/**
+	 * Builds the DDL SQL to drop the primary key of a table.
+	 *
+	 * @param      Table $table
+	 * @return     string
+	 */
+	public function getDropPrimaryKeyDDL(Table $table)
+	{
+		$pattern = "
+ALTER TABLE %s DROP CONSTRAINT %s;
+";
+		return sprintf($pattern,
+			$this->quoteIdentifier($table->getName()),
+			$this->quoteIdentifier($table->getCommonName() . '_pkey')
+		);
+	}	
 
 }
